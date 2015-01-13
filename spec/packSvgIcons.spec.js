@@ -33,7 +33,7 @@ describe('gulp-packSvgIcons', function() {
 		};
 
 		it('repacks svg documents', function(done) {
-			var packer = packSvgIcons();
+			var packer = packSvgIcons('test.svg');
 			var source = svgFixture();
 			packer.write(source);
 
@@ -49,7 +49,7 @@ describe('gulp-packSvgIcons', function() {
 		});
 
 		it('aggregates multiple svg documents', function(done) {
-			var packer = packSvgIcons();
+			var packer = packSvgIcons('test.svg');
 			packer.write(svgFixture());
 			packer.write(svgFixture());
 
@@ -68,7 +68,7 @@ describe('gulp-packSvgIcons', function() {
 		it('integrates with gulp', function(done) {
 			// simulate the actual usage scenario with gulp
 			gulp.src(fixtures('*'))
-				.pipe(packSvgIcons())
+				.pipe(packSvgIcons('test.svg'))
 				.pipe(assert.first(function(dest) {
 					var outcome = parser.parseFromString(dest.contents.toString('utf8'));
 					testBaseSVGProperties(outcome, 'icon_icon1');
@@ -79,11 +79,15 @@ describe('gulp-packSvgIcons', function() {
 
 		it('emits error on streamed file', function(done) {
 			gulp.src(fixtures('*'), {buffer: false})
-				.pipe(packSvgIcons())
+				.pipe(packSvgIcons('test.svg'))
 				.on('error', function(error) {
 					expect(error.message).toEqual('Streams not supported');
 					done();
 				});
+		});
+
+		it('throws error when no file name is given', function() {
+			expect(function() { packSvgIcons(); }).toThrow();
 		});
 	});
 });

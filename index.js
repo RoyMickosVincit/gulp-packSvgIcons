@@ -58,13 +58,16 @@ var peel = function(file){
 	}
 };
 
-var packIcons = function() {
+var packIcons = function(filename) {
+	if (!filename || typeof filename !== 'string') {
+		throw new PluginError(PluginName, 'Missing filename option (must be of type string)');
+	}
 	parser = new DOMParser();
 	serializer = new XMLSerializer();
 	packedIcons = parser.parseFromString(wrapperDocText, 'image/svg+xml');
 	defsElement = packedIcons.getElementsByTagName('defs')[0];
 	anonymous_counter = 0;
-	result = new File();
+	result = new File({path: filename});
 	var stream = through.obj(function(file, encoding, callback) {   // transform function
 		if (file.isBuffer()) {
 			peel(file);
