@@ -1,5 +1,5 @@
 /**
- *  Some wise stuff here...
+ *  Pack a set of svg files as svg def's inside a hidden svg document
  */
 var gutil = require('gulp-util');
 var PluginError = gutil.PluginError;
@@ -21,14 +21,11 @@ var result;
 var slugifyFileName = function(filepath) {
 	var base;
 	if (filepath) {
-		console.log(filepath);
 		base = path.basename(filepath, '.svg');
 	}
 	if (filepath && base) {
-		// tähän jäätiin -- pilko tästä tiedostonimi ja tee uusi slug
 		return 'icon_' + slugify(base);
 	} else {
-		console.log('bumping anonymous_counter');
 		return 'icon_svg' + (++anonymous_counter);
 	}
 };
@@ -48,7 +45,6 @@ var packIcon = function(slug, svg) {
 
 var peel = function(file){
 	var svgText = file.contents.toString('utf8');
-	console.log('peeling: ', svgText);
 	var dom = parser.parseFromString(svgText, 'image/svg+xml');
 	var svgList = dom.getElementsByTagName('svg');
 	var retval, slug;
@@ -71,17 +67,14 @@ var packIcons = function(filename) {
 	var stream = through.obj(function(file, encoding, callback) {   // transform function
 		if (file.isBuffer()) {
 			peel(file);
-			//file.outcome = new Buffer('');
 		}
 		if (file.isStream()) {
 			this.emit('error', new PluginError(PluginName, 'Streams not supported'));
 		}
-		// this.push(file);
 		callback();
 	}, function(callback) {   // flush function
 		var pString = serializer.serializeToString(packedIcons);
 		result.contents = new Buffer(pString);
-		console.log(pString);
 		this.push(result);
 		callback();		
 	});

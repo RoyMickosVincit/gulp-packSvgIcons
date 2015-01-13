@@ -39,7 +39,6 @@ describe('gulp-packSvgIcons', function() {
 
 			packer.once('data', function(file) {
 				expect(file.isBuffer()).toBeTruthy();
-				console.log('file contents: ', file.contents.toString('utf8'));
 				var outcome = parser.parseFromString(file.contents.toString('utf8'));
 				testBaseSVGProperties(outcome, 'icon_svg1');
 				done();
