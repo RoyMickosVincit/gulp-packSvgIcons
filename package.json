@@ -1,6 +1,6 @@
 {
   "name": "gulp-packSvgIcons",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Pack a set of svg icons into one svg fragment for injecting it to html.",
   "main": "index.js",
   "scripts": {
